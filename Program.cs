@@ -14,7 +14,7 @@ namespace EdsSpotify
 {
   class Program
   {
-
+    // Function to prompt the user for a string input
     static string PromptString(string prompt)
     {
       Console.WriteLine(prompt);
@@ -22,6 +22,7 @@ namespace EdsSpotify
       return userInput;
     }
 
+    // Function to prompt the user for a date input in the format "yyyy-MM-dd"
     static DateTime PromptDate(string prompt)
     {
       DateTime userInput;
@@ -40,6 +41,7 @@ namespace EdsSpotify
       }
     }
 
+    // Function to prompt the user for an integer input
     static int PromptInt(string prompt)
     {
       int userInput;
@@ -58,6 +60,7 @@ namespace EdsSpotify
       }
     }
 
+    // Function to display a welcome message
     static void Greetings()
     {
 
@@ -75,6 +78,7 @@ namespace EdsSpotify
     static void Main(string[] args)
     {
 
+      // Create an instance of the database context.
       var context = new EdsSpotifyContext();
 
       bool menuKeepGoing = true;
@@ -215,19 +219,19 @@ namespace EdsSpotify
 
       }
     }
-
+    // Helper method to handle signing a new band
     private static void newBandSigned(out int userInput, out bool isSigned)
     {
       Console.WriteLine("Is the Band signed?: (1) Yes, Band is Signed (2) Band is NOT Signed");
       userInput = Convert.ToInt32(Console.ReadLine());
       isSigned = true;
     }
-
+    // Helper method to display a message when a band already exists
     private static void newBandIsNotNull(Bands searchNewBandName)
     {
       Console.WriteLine($"Name for the Band {searchNewBandName} Already exist");
     }
-
+    // Helper method to collect information for a new band
     private static void askingNewBandInfo(string nameToSearch, out string newBandName, out string countryOfOrigin, out int numberOfMembers, out string website, out string genre)
     {
       Console.WriteLine($"New Album Name:{nameToSearch}");
@@ -237,7 +241,7 @@ namespace EdsSpotify
       website = PromptString($"What is {newBandName} Website?:  ");
       genre = PromptString("what is the Genre?: ");
     }
-
+    // Helper method to add a new band to the database
     private static void newBandInfo(EdsSpotifyContext context, string newBandName, string countryOfOrigin, int numberOfMembers, string website, string genre, bool isSigned, string contactName)
     {
       var newBand = new Bands
@@ -257,7 +261,7 @@ namespace EdsSpotify
       Console.WriteLine("\n");
       Console.WriteLine("Going back to the Main menu now.");
     }
-
+    // Helper method to collect information for a new album
     private static void albumInfo(out string albumTitle, out bool IsExplicit, out DateTime releaseDate)
     {
       // Now, you can add an album for the existing band.
@@ -283,7 +287,7 @@ namespace EdsSpotify
       releaseDate = PromptDate("Enter the release date (yyyy-MM-dd): ");
       releaseDate = DateTime.SpecifyKind(releaseDate, DateTimeKind.Utc);
     }
-
+    // Helper method to add a new album for a band
     private static void addingAlbumForBand(EdsSpotifyContext context, Bands bandNameSearch, string albumTitle, bool IsExplicit, DateTime releaseDate)
     {
       var newAlbum = new Albums
@@ -302,13 +306,13 @@ namespace EdsSpotify
       Console.WriteLine("\n");
       Console.WriteLine("Going back to the Main menu now.");
     }
-
+    // Helper method to handle the case when the band does not exist
     private static void bandNameNull()
     {
       Console.WriteLine("Please, go back to the menu and Insert that New Band First");
       return;
     }
-
+    // Helper method to search for a band by name
     private static Bands bandNameForAlbum(EdsSpotifyContext context)
     {
       var bandNameGiven = PromptString("What is the Bands name you're trying to an Album in?: ");
@@ -316,13 +320,13 @@ namespace EdsSpotify
       var bandNameSearch = context.Bands.FirstOrDefault(value => value.Name.ToUpper() == bandNameGiven.ToUpper());
       return bandNameSearch;
     }
-
+    // Helper method to handle the case when the album does not exist
     private static void albumNull()
     {
       Console.WriteLine("Album does NOT Exist.\nPlease Add the Album First in Menu");
       return;
     }
-
+    //Helper method to get Album name
     private static Albums albumName(EdsSpotifyContext context)
     {
       var nameAlbumGiven = PromptString("What is the name of the Album you want to Add a Song To?: ");
@@ -330,7 +334,7 @@ namespace EdsSpotify
       var albumNameSearch = context.Albums.FirstOrDefault(value => value.Title.ToUpper() == nameAlbumGiven.ToUpper());
       return albumNameSearch;
     }
-
+    // Helper method to add a new song to an album
     private static void addingSong(EdsSpotifyContext context, Albums albumNameSearch)
     {
       var songTitle = PromptString("What is the Name of the SONG?: ");
@@ -354,14 +358,14 @@ namespace EdsSpotify
 
       Console.WriteLine($"Song '{songTitle}' added to ALBUM '{albumNameSearch.Title}'.");
     }
-
+    // Helper method to display the main menu and get user input
     private static int Menu()
     {
       Console.WriteLine("What would you Like to do?:\n(1)Add a new band \n(2)View all the bands \n(3)Add an album for a band \n(4)Add a song to an album \n(5)Let a band go (update isSigned to false) \n(6)Resign a band (update isSigned to true) \n(7)Prompt for a band name and view all their albums \n(8)View all albums ordered by ReleaseDate \n(9)View bands that are signed or Un-Signed \n(10)Quit");
       var userMenuInput = Convert.ToInt32(Console.ReadLine().ToUpper());
       return userMenuInput;
     }
-
+    // Helper method to view all bands
     private static void viewBands(EdsSpotifyContext context)
     {
       Console.WriteLine("Viewing All bands");
@@ -375,7 +379,7 @@ namespace EdsSpotify
       }
       Console.WriteLine($"Total Bands in Ed's Spotify : {bandCount}\n");
     }
-
+    // Helper method to un-sign a band
     private static void unSignBand(EdsSpotifyContext context)
     {
       var bandNameGiven = PromptString("What Band do you want to UN-Sign?: ");
@@ -425,7 +429,7 @@ namespace EdsSpotify
 
       }
     }
-
+    // Helper method to sign a band
     private static void signBand(EdsSpotifyContext context)
     {
       var bandNameGiven = PromptString("What Band do you want to SIGN?: ");
@@ -467,7 +471,7 @@ namespace EdsSpotify
         }
       }
     }
-
+    // Helper method to view albums ordered by release date
     private static void albumsByReleaseDate(EdsSpotifyContext context)
     {
       Console.WriteLine("Going to View All Albums By Release Date in Order ");
@@ -493,7 +497,7 @@ namespace EdsSpotify
 
       }
     }
-
+    // Helper method to view signed or un-signed bands
     private static void isItSigned(EdsSpotifyContext context)
     {
       Console.WriteLine("How would you like to view Bands? By (S)Signed or (U)Un-Signed");
@@ -531,7 +535,7 @@ namespace EdsSpotify
 
       }
     }
-
+    // Helper method to prompt for a band name and view their album discography
     private static void PromptBandName(EdsSpotifyContext context)
     {
       var nameGiven = PromptString("What is the Bands name that you would like to see their Album Discography?: ").ToUpper();
@@ -569,7 +573,7 @@ namespace EdsSpotify
 
       }
     }
-
+    // Helper method to quit the program
     private static bool quit()
     {
       bool menuKeepGoing;
